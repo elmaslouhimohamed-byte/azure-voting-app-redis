@@ -5,6 +5,8 @@ on:
       - "azure-vote/**"
 jobs:
   build:
+    permissions:
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code 
