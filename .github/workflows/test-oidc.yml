@@ -1,0 +1,20 @@
+name: Obtenir le Sujet OIDC
+on:
+  push:
+    branches: [ main ] # Déclencheur (ex: branche main)
+
+permissions:
+  id-token: write
+
+jobs:
+  recuperer-sujet:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Lire et décoder le jeton
+      run: |
+        # Demande le jeton à l'émetteur GitHub
+        JWT=$(curl -s "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=api://AzureADTokenExchange" -H "Authorization: Bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" | jq -r '.value')
+        
+        # Extrait et affiche la partie "Payload" (le sujet)
+        echo "Voici votre sujet (subject) :"
+        echo "$JWT" | cut -d'.' -f2 | base64 --decode | jq '.sub'
